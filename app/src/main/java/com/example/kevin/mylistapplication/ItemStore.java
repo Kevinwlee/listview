@@ -6,17 +6,19 @@ import java.util.ArrayList;
  * Created by kevin on 5/5/16.
  */
 public class ItemStore {
-    private ArrayList<String> stringArray;
 
-    public ItemStore() {
-        new ItemStore(0);
+    private ArrayList<String> stringArray;
+    private static ItemStore instance = null;
+
+    protected ItemStore() {
+        stringArray = new ArrayList<>();
     }
 
-    public ItemStore(int defaultItems) {
-        stringArray = new ArrayList<String>();
-        for (int i = 0; i < defaultItems; i++) {
-            stringArray.add(String.format("Item %d", i));
+    public static ItemStore getInstance() {
+        if(instance == null) {
+            instance = new ItemStore();
         }
+        return instance;
     }
 
     public void addItem(String item) {
@@ -25,12 +27,15 @@ public class ItemStore {
 
     public void removeItem(int index) {
         stringArray.remove(index);
-
     }
 
     public void updateItem(String item, int index) {
         stringArray.remove(index);
         stringArray.add(index,item);
+    }
+
+    public String getItemAtIndex(int index) {
+        return stringArray.get(index);
     }
 
     public ArrayList<String>items() {

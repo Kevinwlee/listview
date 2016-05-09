@@ -29,16 +29,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        // add custom toolbar
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(myToolbar);
-//
-//        ActionBar bar = getSupportActionBar();
-//        bar.setTitle("Hello Action Bar");
-
-
-
-        store = new ItemStore(2);
+        store = ItemStore.getInstance();
 
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, store.items());
@@ -47,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
         handleClicks(listView);
-        Intent detail = new Intent(this, ItemDetailActivity.class);
     }
 
     private void handleClicks(ListView view) {
@@ -57,23 +47,17 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View view,
                                             int position, long id) {
-                        Adapter listAdapter = arg0.getAdapter();
-                        String item = (String) listAdapter.getItem(position);
-
-                        Log.d("LOG", "Tapped " + item);
 
                         Intent detail = new Intent(MainActivity.this, ItemDetailActivity.class);
-                        detail.putExtra("itemKey", item);
+
+                        //passing the position, but would normally pass an id here.
+                        detail.putExtra("itemIndexKey", position);
+//                        startActivityForResult(detail,0);
                         startActivity(detail);
 
                     }
                 }
         );
-    }
-
-    void onAddItem(MenuItem item) {
-        store.addItem("test item");
-        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -90,10 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-//    @Override
-//    public void onListItemClick(ListView l, View v, int position, long id) {
-//        // Do something when a list item is clicked
-//    }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
 }
