@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -19,10 +21,11 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    ArrayAdapter<String> adapter;
     ItemStore store;
-    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +34,21 @@ public class MainActivity extends AppCompatActivity {
 
         store = ItemStore.getInstance();
 
-        adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, store.items());
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(adapter);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
 
-        handleClicks(listView);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new RecyclerAdapter(store);
+        mRecyclerView.setAdapter(mAdapter);
+
+
     }
 
     private void handleClicks(ListView view) {
@@ -47,12 +58,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> arg0, View view,
                                             int position, long id) {
-
                         Intent detail = new Intent(MainActivity.this, ItemDetailActivity.class);
-
                         //passing the position, but would normally pass an id here.
                         detail.putExtra("itemIndexKey", position);
-//                        startActivityForResult(detail,0);
                         startActivity(detail);
 
                     }
@@ -70,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         store.addItem("test item");
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
 
         return super.onOptionsItemSelected(item);
     }
@@ -78,6 +86,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
     }
 }
