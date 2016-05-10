@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RecyclerAdapter(store);
         mRecyclerView.setAdapter(mAdapter);
 
-
     }
 
     private void handleClicks(ListView view) {
