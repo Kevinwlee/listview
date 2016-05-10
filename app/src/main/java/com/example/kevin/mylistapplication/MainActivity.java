@@ -1,28 +1,17 @@
 package com.example.kevin.mylistapplication;
 
-import android.content.ClipData;
-import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     ItemStore store;
@@ -48,23 +37,11 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new RecyclerAdapter(store);
         mRecyclerView.setAdapter(mAdapter);
 
-    }
+        ItemTouchHelper.Callback callback =
+                new SimpleItemTouchHelperCallback(mAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(mRecyclerView);
 
-    private void handleClicks(ListView view) {
-        view.setOnItemClickListener(
-                new AdapterView.OnItemClickListener()
-                {
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View view,
-                                            int position, long id) {
-                        Intent detail = new Intent(MainActivity.this, ItemDetailActivity.class);
-                        //passing the position, but would normally pass an id here.
-                        detail.putExtra("itemIndexKey", position);
-                        startActivity(detail);
-
-                    }
-                }
-        );
     }
 
     @Override
@@ -78,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         store.addItem("test item");
         mAdapter.notifyDataSetChanged();
-
         return super.onOptionsItemSelected(item);
     }
 
