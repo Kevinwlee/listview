@@ -16,14 +16,14 @@ public class MainActivity extends AppCompatActivity implements IRecyclerClickHan
     private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    ItemStore store;
+    EntryStore store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        store = ItemStore.getInstance();
+        store = EntryStore.getInstance();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -55,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclerClickHan
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        store.addItem("test item");
+        Entry entry = new Entry("test name", 0);
+        store.addItem(entry);
         mAdapter.notifyDataSetChanged();
         return super.onOptionsItemSelected(item);
     }
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclerClickHan
     public void onClick(int position) {
         Log.d("DEBUG", "on click handled in main");
         Intent detail = new Intent(MainActivity.this, ItemDetailActivity.class);
+        mAdapter.getItemId(position);
         detail.putExtra("itemIndexKey", position);
         startActivity(detail);
     }

@@ -1,10 +1,7 @@
 package com.example.kevin.mylistapplication;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +17,7 @@ import java.util.Collections;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
-    private ItemStore mDataSet;
+    private EntryStore mDataSet;
     public IRecyclerClickHandler clickHandler;
 
     // Provide a reference to the views for each data item
@@ -53,7 +50,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapter(ItemStore myDataSet, IRecyclerClickHandler recyclerClickHandler) {
+    public RecyclerAdapter(EntryStore myDataSet, IRecyclerClickHandler recyclerClickHandler) {
         mDataSet = myDataSet;
         clickHandler = recyclerClickHandler;
     }
@@ -77,7 +74,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(mDataSet.getItemAtIndex(position));
+        Entry entry = mDataSet.getItemAtIndex(position);
+        holder.mTextView.setText(entry.name);
 
     }
 

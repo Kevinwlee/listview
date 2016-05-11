@@ -11,10 +11,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 public class ItemDetailActivity extends AppCompatActivity {
 
     private int index;
-    private ItemStore store;
+    private Entry entry;
+    private EntryStore store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,16 +25,17 @@ public class ItemDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_item_detail);
         Intent myIntent = getIntent();
         index = myIntent.getIntExtra("itemIndexKey", -1);
-        store = ItemStore.getInstance();
+        store = EntryStore.getInstance();
         if (index != -1) {
+            entry = store.getItemAtIndex(index);
             dataBind();
         }
     }
 
     private void dataBind() {
-        String item = store.getItemAtIndex(index);
+
         TextView textView = (TextView) findViewById(R.id.itemTextView);
-        textView.setText(item);
+        textView.setText(entry.name);
     }
 
     public void onDelete(View view) {
@@ -41,7 +45,7 @@ public class ItemDetailActivity extends AppCompatActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // continue with delete
-                        store.removeItem(index);
+                        store.removeItem(entry);
 
                         Context context = getApplicationContext();
                         CharSequence text = "Item deleted.";
@@ -64,7 +68,7 @@ public class ItemDetailActivity extends AppCompatActivity {
 
     public void onEdit(View view) {
         Intent detail = new Intent(this, EditItemActivity.class);
-        detail.putExtra("itemIndexKey", index);
+        detail.putExtra("itemIndexKey", entry.id.toString());
         startActivity(detail);
     }
 

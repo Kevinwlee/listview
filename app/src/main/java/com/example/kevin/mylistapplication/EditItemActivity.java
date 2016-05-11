@@ -6,13 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class EditItemActivity extends AppCompatActivity {
 
-    private int index;
-    private ItemStore store;
+    private String uuid;
+    private Entry entry;
+    private EntryStore store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,17 +22,18 @@ public class EditItemActivity extends AppCompatActivity {
         Intent myIntent = getIntent();
 
 
-        index = myIntent.getIntExtra("itemIndexKey", -1);
-        store = ItemStore.getInstance();
-        if (index != -1) {
+        uuid = myIntent.getStringExtra("itemIndexKey");
+        store = EntryStore.getInstance();
+        if (uuid != null) {
+            entry = store.getItemWithId(uuid);
             dataBind();
         }
     }
 
     protected void dataBind() {
-        String item = store.getItemAtIndex(index);
+
         EditText editText = (EditText) findViewById(R.id.editText);
-        editText.setText(item);
+        editText.setText(entry.name);
     }
 
 
@@ -42,7 +43,7 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void saveClicked(View view) {
         EditText editText = (EditText) findViewById(R.id.editText);
-        store.updateItem(editText.getText().toString(), index);
+        entry.name = editText.getText().toString();
 
         Context context = getApplicationContext();
         CharSequence text = "Item updated.";
