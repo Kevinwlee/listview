@@ -21,19 +21,21 @@ import java.util.Collections;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
     private ItemStore mDataSet;
+    public IRecyclerClickHandler clickHandler;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
-        private final Context context;
+
         public TextView mTextView;
-        public ViewHolder(View v) {
+        IRecyclerClickHandler clickHandler;
+
+        public ViewHolder(View v, IRecyclerClickHandler handler) {
             super(v);
 
-            context = v.getContext();
-
+            clickHandler = handler;
             v.setClickable(true);
             v.setOnClickListener(this);
             mTextView = (TextView) v.findViewById(R.id.info_text);;
@@ -44,18 +46,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             TextView textView = (TextView)v.findViewById(R.id.info_text);
             Log.d("DEBUG", "clicked: " + getAdapterPosition() + " " + textView.getText());
 
-            Intent detail = new Intent(context, ItemDetailActivity.class);
-            detail.putExtra("itemIndexKey", getAdapterPosition());
-            context.startActivity(detail);
-
+            clickHandler.onClick(getAdapterPosition());
         }
 
     }
 
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public RecyclerAdapter(ItemStore myDataSet) {
+    public RecyclerAdapter(ItemStore myDataSet, IRecyclerClickHandler recyclerClickHandler) {
         mDataSet = myDataSet;
+        clickHandler = recyclerClickHandler;
     }
 
     // Create new views (invoked by the layout manager)
@@ -70,7 +70,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         v.setBackgroundColor(Color.GREEN);
 
         v.findViewById(R.id.info_text);
-        RecyclerAdapter.ViewHolder vh = new ViewHolder(v);
+        RecyclerAdapter.ViewHolder vh = new ViewHolder(v, clickHandler);
         return vh;
     }
 

@@ -1,15 +1,17 @@
 package com.example.kevin.mylistapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IRecyclerClickHandler {
     private RecyclerView mRecyclerView;
     private RecyclerAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new RecyclerAdapter(store);
+        mAdapter = new RecyclerAdapter(store, this);
         mRecyclerView.setAdapter(mAdapter);
 
         ItemTouchHelper.Callback callback =
@@ -63,4 +65,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         mAdapter.notifyDataSetChanged();
     }
+
+    public void onClick(int position) {
+        Log.d("DEBUG", "on click handled in main");
+        Intent detail = new Intent(MainActivity.this, ItemDetailActivity.class);
+        detail.putExtra("itemIndexKey", position);
+        startActivity(detail);
+    }
 }
+
