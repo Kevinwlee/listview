@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity implements IRecyclerClickHan
         setContentView(R.layout.activity_main);
 
         store = EntryStore.getInstance();
+        store.loadMockData();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
@@ -38,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements IRecyclerClickHan
         // specify an adapter (see also next example)
         mAdapter = new RecyclerAdapter(store, this);
         mRecyclerView.setAdapter(mAdapter);
+
+
 
         ItemTouchHelper.Callback callback =
                 new SimpleItemTouchHelperCallback(mAdapter);

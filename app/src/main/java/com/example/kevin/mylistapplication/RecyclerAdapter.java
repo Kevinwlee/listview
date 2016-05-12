@@ -2,7 +2,6 @@ package com.example.kevin.mylistapplication;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import java.util.Collections;
  * Created by kevin on 5/9/16.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> implements ItemTouchHelperAdapter {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> implements IItemTouchHelperAdapter {
 
     private EntryStore mDataSet;
     public IRecyclerClickHandler clickHandler;
@@ -26,57 +25,77 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
 
-        public TextView mTextView;
+        public TextView mTitleTextView;
+        public TextView mCountTextView;
+        public TextView mSectionTitleTextView;
         IRecyclerClickHandler clickHandler;
 
         public ViewHolder(View v, IRecyclerClickHandler handler) {
             super(v);
 
             clickHandler = handler;
+
             v.setClickable(true);
             v.setOnClickListener(this);
-            mTextView = (TextView) v.findViewById(R.id.info_text);;
+
+            if (v.getId() == R.id.section_text) {
+                mSectionTitleTextView = (TextView) v.findViewById(R.id.section_text);
+            } else {
+                mTitleTextView = (TextView) v.findViewById(R.id.info_text);
+                mCountTextView = (TextView) v.findViewById(R.id.count_text);
+            }
+
         }
 
         @Override
         public void onClick(View v) {
-            TextView textView = (TextView)v.findViewById(R.id.info_text);
-            Log.d("DEBUG", "clicked: " + getAdapterPosition() + " " + textView.getText());
-
             clickHandler.onClick(getAdapterPosition());
         }
-
     }
 
 
-    // Provide a suitable constructor (depends on the kind of dataset)
     public RecyclerAdapter(EntryStore myDataSet, IRecyclerClickHandler recyclerClickHandler) {
         mDataSet = myDataSet;
         clickHandler = recyclerClickHandler;
     }
 
-    // Create new views (invoked by the layout manager)
+    @Override
+    public int getItemViewType(int position) {
+        Entry entry = mDataSet.getItemAtIndex(position);
+        return entry.isSection ? 1 : 0;
+    }
+
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
-        // create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.my_text_view, parent, false);
-        // set the view's size, margins, padding and layout parameters
+                                                         int viewType) {
+        View v;
+        if (viewType == 0) {
+            v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.my_text_view, parent, false);
+
+        } else {
+            v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.section, parent, false);
+
+        }
 
         v.setBackgroundColor(Color.GREEN);
 
-        v.findViewById(R.id.info_text);
         RecyclerAdapter.ViewHolder vh = new ViewHolder(v, clickHandler);
         return vh;
+
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Entry entry = mDataSet.getItemAtIndex(position);
-        holder.mTextView.setText(entry.name);
-
+        if (entry.isSection) {
+            holder.mSectionTitleTextView.setText(entry.name);
+        } else {
+            holder.mTitleTextView.setText(entry.name);
+            holder.mCountTextView.setText("HELLO");
+        }
     }
 
     // Return the size of your dataset (invoked by the layout manager)

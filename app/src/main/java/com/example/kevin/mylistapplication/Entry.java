@@ -9,6 +9,7 @@ public class Entry {
     String id;
     String name;
     int amount;
+    boolean isSection = false;
 
     public Entry(String name, int amount) {
         this.name = name;

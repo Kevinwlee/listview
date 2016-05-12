@@ -47,4 +47,27 @@ public class EntryStore {
         return entries;
     }
 
+
+    public void loadMockData() {
+        // create a section
+        Entry section1 = new Entry("Section 1", 1000);
+        section1.isSection = true;
+        this.entries.add(section1);
+
+        // create some entries
+        for (int i = 0; i < 5; i++) {
+            Entry entry = new Entry("Name " + i, (i * 5));
+            this.entries.add(entry);
+        }
+
+        // create another section
+        Entry section2 = new Entry("Section 2", 999);
+        section2.isSection = true;
+        this.entries.add(section2);
+        // create more entries
+        for (int i = 0; i < 5; i++) {
+            Entry entry = new Entry("Name" + i, (i * 10));
+            this.entries.add(entry);
+        }
+    }
 }
