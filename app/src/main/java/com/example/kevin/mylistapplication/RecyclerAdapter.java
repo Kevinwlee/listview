@@ -19,11 +19,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private EntryStore mDataSet;
     public IRecyclerClickHandler clickHandler;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        // each data item is just a string in this case
 
         public TextView mTitleTextView;
         public TextView mCountTextView;
@@ -35,12 +31,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
             clickHandler = handler;
 
-            v.setClickable(true);
-            v.setOnClickListener(this);
-
             if (v.getId() == R.id.section_text) {
                 mSectionTitleTextView = (TextView) v.findViewById(R.id.section_text);
             } else {
+                v.setClickable(true);
+                v.setOnClickListener(this);
+
                 mTitleTextView = (TextView) v.findViewById(R.id.info_text);
                 mCountTextView = (TextView) v.findViewById(R.id.count_text);
             }
@@ -72,21 +68,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         if (viewType == 0) {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.my_text_view, parent, false);
-
+            v.setBackgroundColor(Color.BLUE);
         } else {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.section, parent, false);
-
+            v.setBackgroundColor(Color.GREEN);
         }
-
-        v.setBackgroundColor(Color.GREEN);
 
         RecyclerAdapter.ViewHolder vh = new ViewHolder(v, clickHandler);
         return vh;
 
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Entry entry = mDataSet.getItemAtIndex(position);
@@ -94,17 +87,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             holder.mSectionTitleTextView.setText(entry.name);
         } else {
             holder.mTitleTextView.setText(entry.name);
-            holder.mCountTextView.setText("HELLO");
+            holder.mCountTextView.setText(String.valueOf(entry.amount));
         }
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
         return mDataSet.items().size();
     }
 
-    //Item Touch Helper
     @Override
     public boolean onItemDismiss(int position) {
         mDataSet.items().remove(position);

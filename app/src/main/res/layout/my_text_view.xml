@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="?listPreferredItemHeight"
     android:backgroundTint="#5b5858"
     android:id="@+id/row_layout">
         <TextView
             android:id="@+id/info_text"
-            android:layout_width="wrap_content"
+            android:layout_width="124dp"
             android:layout_height="match_parent"
             android:paddingTop="10dp"
             android:paddingStart="16dp"
@@ -16,13 +16,17 @@
             android:background="@android:color/transparent"/>
         <TextView
             android:id="@+id/count_text"
-            android:layout_width="wrap_content"
+            android:layout_width="95dp"
             android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="#ffffff"
-            android:layout_gravity="end|top"
             android:layout_marginEnd="10dp"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:layout_gravity="right"
+            android:textAlignment="gravity"/>
 
 
 </LinearLayout>
